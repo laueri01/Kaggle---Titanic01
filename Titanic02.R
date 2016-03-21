@@ -105,7 +105,47 @@ for (i in 1:nrow(trainData)) {
 }
 
 
+
+
+# Create new variables to improve the model
+
+# classify Child as less than 12 years old
+
+# Remove 
+#trainData = trainData[-c(8)]
+
+trainData["Child"] = NA
+for (i in 1:nrow(trainData)) {
+  if (trainData$Age[i] <= 12) {
+    trainData$Child[i] = 1
+  } else {
+    trainData$Child[i] = 2
+  }
+}
+
+
+# Family
+# Classify Family (count) are parent with siblings 
+trainData["Family"] = NA
+
+for(i in 1:nrow(trainData)) {
+  x = trainData$SibSp[i]
+  y = trainData$Parch[i]
+  # Siblings add Childs add 1 for non-zero
+  trainData$Family[i] = x + y + 1
+}
+
+
+# Mother
+# classify Mother to 1 are Mrs with child
+trainData["Mother"] = NA
+for(i in 1:nrow(trainData)) {
+  if(trainData$Name[i] == "Mrs" & trainData$Parch[i] > 0) {
+    trainData$Mother[i] = 1
+  } else {
+    trainData$Mother[i] = 2
+  }
+}
+
 # ^^^^^^^^^^^================== above tested =============================^^^^^^^^^
-
-
 
