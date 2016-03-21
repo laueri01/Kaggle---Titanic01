@@ -233,3 +233,32 @@ for(i in 1:nrow(testData)) {
 
 # ^^^^^^^^^^^================== above tested =============================^^^^^^^^^
 
+# parameters for the survival prediction 
+# Passenger Class, Sex, Age, Child 
+# interaction variable of Sex AND Passenger Class, Family,Mother
+
+train.glm <- glm(Survived ~ Pclass + Sex + Age + Child + Sex*Pclass + Family + Mother, 
+                 family = binomial, data = trainData)
+anova(train.glm)
+summary(train.glm)
+
+p.hats <- predict.glm(train.glm, newdata = testData, type = "response")
+
+survival <- vector()
+for(i in 1:length(p.hats)) {
+  if(p.hats[i] > .5) {
+    survival[i] <- 1
+  } else {
+    survival[i] <- 0
+  }
+}
+
+kaggle.sub01 <- cbind(PassengerId,survival)
+colnames(kaggle.sub01) <- c("PassengerId", "Survived")
+write.csv(kaggle.sub01, file = "kaggle01.csv", row.names = FALSE)
+
+View(kaggle.sub01)
+
+
+
+
