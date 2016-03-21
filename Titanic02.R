@@ -147,5 +147,89 @@ for(i in 1:nrow(trainData)) {
   }
 }
 
+# Prepare test data set
+# reset test data set
+testData <- read.csv("test.csv", header = TRUE, stringsAsFactors = FALSE)
+
+PassengerId = testData[1]
+testData = testData[-c(1, 8:11)]
+
+testData$Sex = gsub("female", 1, testData$Sex)
+testData$Sex = gsub("^male", 0, testData$Sex)
+
+# Replace long name with just the title
+test_master_vector = grep("Master.",testData$Name, fixed = TRUE)
+test_miss_vector = grep("Miss.", testData$Name, fixed = TRUE)
+test_mrs_vector = grep("Mrs.", testData$Name, fixed = TRUE)
+test_mr_vector = grep("Mr.", testData$Name, fixed = TRUE)
+test_dr_vector = grep("Dr.", testData$Name, fixed = TRUE)
+
+testData[test_master_vector,]$Name <-"Master"
+testData[test_miss_vector,]$Name <-"Miss"
+testData[test_mrs_vector,]$Name <-"Mrs"
+testData[test_mr_vector,]$Name <-"Mr"
+testData[test_dr_vector,]$Name <-"Dr"
+
+# Manual Replacement
+testData[89,2] <- "Miss"
+
+
+# Replace missing in age with average age of the grounp
+test_master_age = round(mean(testData$Age[testData$Name == "Master"], na.rm =TRUE),digits=2)
+test_miss_age = round(mean(testData$Age[testData$Name == "Miss"], na.rm =TRUE),digits=2)
+test_mrs_age = round(mean(testData$Age[testData$Name == "Mrs"], na.rm =TRUE),digits=2)
+test_mr_age = round(mean(testData$Age[testData$Name == "Mr"], na.rm =TRUE),digits=2)
+test_dr_age = round(mean(testData$Age[testData$Name == "Dr"], na.rm =TRUE),digits=2)
+
+# cat(test_master_age, test_miss_age, test_mrs_age, test_mr_age, test_dr_age)
+
+# Reset Age to NA testData$Age = ""
+
+for (i in 1:nrow(testData)) {
+  if (is.na(testData[i,4])) {
+    if (testData$Name[i] == "Master") {
+      testData$Age[i] = test_master_age
+    } else if (testData$Name[i] == "Miss") {
+      testData$Age[i] = test_miss_age
+    } else if (testData$Name[i] == "Mrs") {
+      testData$Age[i] = test_mrs_age
+    } else if (testData$Name[i] == "Mr") {
+      testData$Age[i] = test_mr_age
+    } else if (testData$Name[i] == "Dr") {
+      testData$Age[i] = test_dr_age
+    } else {
+      print(paste("Other title at: ", i, sep=""))
+      print(paste("Other title: ", testData[i,2], sep=""))
+    }
+  }
+}
+
+#manual replacement for other title if req
+
+# new variables
+
+testData["Child"] = NA
+for (i in 1:nrow(testData)) {
+  if (testData$Age[i] <= 12) {
+    testData$Child[i] = 1
+  } else {
+    testData$Child[i] = 2
+  }
+}
+
+testData["Family"] = NA
+for(i in 1:nrow(testData)) {
+  testData$Family[i] = testData$SibSp[i] + testData$Parch[i] + 1
+}
+
+testData["Mother"] = NA
+for(i in 1:nrow(testData)) {
+  if(testData$Name[i] == "Mrs" & testData$Parch[i] > 0) {
+    testData$Mother[i] = 1
+  } else {
+    testData$Mother[i] = 2
+  }
+}
+
 # ^^^^^^^^^^^================== above tested =============================^^^^^^^^^
 
