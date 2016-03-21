@@ -44,3 +44,68 @@ DiePclass2 <- (Pclass_survival[4] / (Pclass_survival[3] + Pclass_survival[4]))*1
 DiePclass3 <- (Pclass_survival[6] / (Pclass_survival[5] + Pclass_survival[6]))*100
 cat(DiePclass1, "% of 3rd class, ", DiePclass2, "% of 2nd class, ", DiePclass3, "% of 1st Class die")
 
+
+# March 20, 2016 Data cleaning
+# From the training data, remove Passenger ID, Ticket, Fare, Cabin and Embar 
+
+trainData = trainData[-c(1,9,10,11,12)]
+
+# View(trainData)
+
+# In Sex field sub "female" with 1 and "male" with 0 for modeling
+trainData$Sex = gsub("female", 1, trainData$Sex)
+trainData$Sex = gsub("male", 0, trainData$Sex)
+
+# padding missing data
+# Titles Master, Mr, Mrs, miss, dr, rev, col, capt, Lady, countess, Mme. Mlle., Don, Jonkheer. Major., Sir., 
+# Replace name field with Title
+
+master_vector = grep("Master.",trainData$Name, fixed=TRUE)
+miss_vector = grep("Miss.", trainData$Name, fixed=TRUE)
+mrs_vector = grep("Mrs.", trainData$Name, fixed=TRUE)
+mr_vector = grep("Mr.", trainData$Name, fixed=TRUE)
+dr_vector = grep("Dr.", trainData$Name, fixed=TRUE)
+
+
+trainData[master_vector,]$Name <- "Master"
+trainData[miss_vector,]$Name <- "Miss"
+trainData[mrs_vector,]$Name <- "Mrs"
+trainData[mr_vector,]$Name <- "Mr"
+trainData[dr_vector,]$Name <- "Dr"
+
+
+# Calculate the average age for each title
+
+master_age = round(mean(trainData$Age[trainData$Name == "Master"], na.rm = TRUE), digits = 2)
+miss_age = round(mean(trainData$Age[trainData$Name == "Miss"], na.rm = TRUE), digits =2)
+mrs_age = round(mean(trainData$Age[trainData$Name == "Mrs"], na.rm = TRUE), digits = 2)
+mr_age = round(mean(trainData$Age[trainData$Name == "Mr"], na.rm = TRUE), digits = 2)
+dr_age = round(mean(trainData$Age[trainData$Name == "Dr"], na.rm = TRUE), digits = 2)
+
+cat("Average age Master:",master_age, " Miss:",
+    miss_age, " Mrs:",mrs_age, " Mr:",mr_age, " Dr:",dr_age)
+
+# Replace NA field with calculated average age
+for (i in 1:nrow(trainData)) {
+  if (is.na(trainData[i,5])) {
+    if (trainData$Name[i] == "Master") {
+      trainData$Age[i] = master_age
+    } else if (trainData$Name[i] == "Miss") {
+      trainData$Age[i] = miss_age
+    } else if (trainData$Name[i] == "Mrs") {
+      trainData$Age[i] = mrs_age
+    } else if (trainData$Name[i] == "Mr") {
+      trainData$Age[i] = mr_age
+    } else if (trainData$Name[i] == "Dr") {
+      trainData$Age[i] = dr_age
+    } else {
+      print("Uncaught Title")
+    }
+  }
+}
+
+
+# ^^^^^^^^^^^================== above tested =============================^^^^^^^^^
+
+
+
