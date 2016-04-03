@@ -231,6 +231,10 @@ for(i in 1:nrow(testData)) {
   }
 }
 
+#testData["Lifeboat"]
+#testData["Embark"]
+
+
 # ^^^^^^^^^^^================== above tested =============================^^^^^^^^^
 
 # parameters for the survival prediction 
