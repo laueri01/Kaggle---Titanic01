@@ -15,6 +15,15 @@ head(trainData)
 plot(density(trainData$Age, na.rm = TRUE))
 plot(density(trainData$Fare, na.rm = TRUE))
 
+# numeric fields review, determine if meaningful
+summary(trainData$Survived)
+summary(trainData$Pclass)
+summary(trainData$Age)
+summary(trainData$SibSp)
+summary(trainData$Parch)
+summary(trainData$Fare)
+
+
 # Survival Rate by Sex Plot #4
 
 counts <- table(trainData$Survived, trainData$Sex)
