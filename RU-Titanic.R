@@ -15,26 +15,35 @@ head(trainData)
 plot(density(trainData$Age, na.rm = TRUE))
 plot(density(trainData$Fare, na.rm = TRUE))
 
-# Survical Rate by Sex
+# Survival Rate by Sex Plot #4
 
 counts <- table(trainData$Survived, trainData$Sex)
-barplot(counts, beside = TRUE, xlab = "Gender", ylab = "Number of People", main = "Survived and deceased between male and female", 
-        col=c("red", "green"), ylim = c(0, 500), legend = c("Deceased", "Survived"))
 
-counts[2] / (counts[1] + counts[2])
-counts[4] / (counts[3] + counts[4])
+maleD <- round(counts[2] / (counts[1] + counts[2]) * 100, digits = 2)
+FmaleD <- round(counts[4] / (counts[3] + counts[4]) * 100, digits = 2)
+t <- paste(maleD,"% of male deceased versus Female deceased of ", FmaleD, "%")
 
-
-
-#Survival Rate by Passenger Class Barplot
+barplot(counts, beside = TRUE, xlab = "Gender", ylab = "Number of People", 
+        main = t, 
+        col=c("red", "green"), 
+        ylim = c(0, 600), 
+        legend = c("Deceased", "Survived"))
+        
+#Survival Rate by Passenger Class Barplot #3
 
 Pclass_survival <- table(trainData$Survived, trainData$Pclass)
-barplot(Pclass_survival, beside = TRUE, xlab = "Cabin Class", ylab = "Number of People", 
-        ylim = c(0, 500), main = "Survived and Deceased by Passenger Class", 
+PC1 <- round(Pclass_survival[2] / (Pclass_survival[1] + Pclass_survival[2])*100, digits=2)
+PC2 <- round(Pclass_survival[4] / (Pclass_survival[3] + Pclass_survival[4])*100, digits=2)
+PC3 <- round(Pclass_survival[6] / (Pclass_survival[5] + Pclass_survival[6])*100, digits=2)
+
+t1 <- paste("Deceased:", PC1,"% of 3rd class, ", PC2, "% of 2nd class, ", PC3, "% of 1st class")
+
+barplot(Pclass_survival, beside = TRUE, 
+        xlab = "Cabin Class", ylab = "Number of People", 
+        ylim = c(0, 500), 
+        main = t1,
         col=c("red", "green"), legend = c("Deceased", "Survived"))
-PC1 <- Pclass_survival[2] / (Pclass_survival[1] + Pclass_survival[2])
-PC2 <- Pclass_survival[4] / (Pclass_survival[3] + Pclass_survival[4])
-PC3 <- Pclass_survival[6] / (Pclass_survival[5] + Pclass_survival[6])
+
 
 # March 18, 2016 Data cleaning
 # From the training data, remove Passenger ID, Ticket, Fare, Cabin and Embar 
@@ -47,6 +56,11 @@ View(test)
 # In Sex field sub "female" with 1 and "male" with 0 for modeling
 trainData$Sex = gsub("female", 1, trainData$Sex)
 trainData$Sex = gsub("male", 0, trainData$Sex)
+
+
+
+
+
 
 # padding missing data
 # Titles Master, Mr, Mrs, miss, dr, rev, col, capt, Lady, countess, Mme. Mlle., Don, Jonkheer. Major., Sir., 
@@ -199,6 +213,9 @@ for (i in 1:nrow(testData)) {
 
 #We do a manual replacement here, because we weren't able to programmatically figure out the title.
 #We figured out it was 89 because the above print statement should have warned us.
+#testData["Lifeboat"]
+#testData["Embark"]
+
 testData[89, 4] = test_miss_age
 
 testData["Child"] = NA
