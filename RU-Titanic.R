@@ -63,6 +63,16 @@ boxplot(trainData$Age ~ trainData$Survived,
         col= c("red","green"))
 
 
+# Passenger cabin class by age
+boxplot(trainData$Age ~ trainData$Pclass,
+        main ="Passenger Cabin Class by Age",
+        xlab="Cabin Class",
+        ylab="Age",
+        names = c("1st","2nd", "3rd"),
+        col= c("blue","green", "brown"))
+
+
+
 
 
 
