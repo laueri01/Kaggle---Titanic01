@@ -44,6 +44,28 @@ barplot(Pclass_survival, beside = TRUE,
         main = t1,
         col=c("red", "green"), legend = c("Deceased", "Survived"))
 
+#Survival by Age #1
+
+boxplot(trainData$Age ~ trainData$Survived,
+        main ="Passenger Survived/Deceased by Age",
+        xlab="",
+        ylab="Age",
+        names = c("Deceased","Survived"),
+        col= c("red","green"))
+
+
+
+
+
+
+
+# Plot: Male and Female counts #2
+
+
+
+
+
+
 
 # March 18, 2016 Data cleaning
 # From the training data, remove Passenger ID, Ticket, Fare, Cabin and Embar 
