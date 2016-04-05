@@ -71,19 +71,12 @@ boxplot(trainData$Age ~ trainData$Pclass,
         names = c("1st","2nd", "3rd"),
         col= c("blue","green", "brown"))
 
-
-
-
-
-
-
-
-# Plot: Male and Female counts #2
-
-
-
-
-
+# Passenger age distribution
+hist(trainData$Age, 
+     main = "Passenger Age Distribution",
+     xlab = "Age", ylab = "Counts",
+     col = "brown",
+     ylim = c(0, 250) )
 
 
 # March 18, 2016 Data cleaning
